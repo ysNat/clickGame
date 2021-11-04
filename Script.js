@@ -1,26 +1,30 @@
 enchant();
 
-//画像拡大倍率を設定//機能してない
-//var imgScale = 1;
-//function smaller(imgScale){
-//	imgScale = imgScale*0.8
-//}
-//let timerId = setInterval(() => smaller(imgScale) ,2000)
-
 var imgScale = 1.0
+//// ボタンサイズ変更するとき
+// var small_rate = 0.8
+// var big_rate = 1.25
+// var scale_rate = small_rate
+//// ボタンサイズ変更しないとき
+var small_rete,big_rate,scale_rate = 1.0
+
 var log = function(){
-	console.log("test");
-	imgScale = imgScale*0.5
+	console.log("test: imsScale="+imgScale);
+	if (imgScale < 0.5){
+		scale_rate = 1.25
+	}else if(imgScale > 2){
+		scale_rate = 0.8
+	}
+	imgScale = imgScale*scale_rate
 };
 
 setInterval(log, 10000);
 // 3秒後に"test"と表示されます
 
+//score表示したいので以下の要素を記録
+var wave_count = 0	//達成面数
+var miss_count = 0	//ミスクリック数（他の数字をクリックしたときのみ）
 
-//let timerId = setTimeout(function smallerImgSlale(imgScale) {
-//	imgScale = imgScale*0.8;
-//	timerId = setTimeout(smallerImgScale, 2000); // (*)
-//	}, 2000);
 
 //ボタン画像サイズの初期設定
 var size = 80;
@@ -398,15 +402,15 @@ window.onload = function () {
 			}
 		}
 
-		// ！クリックしたらボタン消えるようにする？		
 		oneImg.ontouchend  = function () {			
 			if(state == 0){
 				game.assets[clickSndUrl].clone().play();
-				oneImg.remove()
+				oneImg.remove()	//クリックされたらボタン画像を消す
 				state = 1;
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 		twoImg.ontouchend  = function () {			
@@ -417,6 +421,7 @@ window.onload = function () {
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;			
 			}
 		};
 		threeImg.ontouchend  = function () {			
@@ -427,6 +432,7 @@ window.onload = function () {
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 		fourImg.ontouchend  = function () {			
@@ -437,6 +443,7 @@ window.onload = function () {
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 		fiveImg.ontouchend  = function () {			
@@ -447,6 +454,7 @@ window.onload = function () {
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 		sixImg.ontouchend  = function () {			
@@ -457,6 +465,7 @@ window.onload = function () {
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 		sevenImg.ontouchend  = function () {			
@@ -467,6 +476,7 @@ window.onload = function () {
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 		eightImg.ontouchend  = function () {			
@@ -477,6 +487,7 @@ window.onload = function () {
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 		nineImg.ontouchend  = function () {			
@@ -484,9 +495,11 @@ window.onload = function () {
 				game.assets[clickSndUrl].clone().play();
 				nineImg.remove()
 				state = 9;
+				wave_count += 1;	
 			}
 			else{
 				game.assets[clickNgUrl].clone().play();
+				miss_count += 1;
 			}
 		};
 
@@ -497,10 +510,11 @@ window.onload = function () {
 				
 			if (state == 9) {					
 				game.popScene();				
-				game.pushScene(endScene);			
+				game.pushScene(endScene);
 
 				//ゲームオーバー後のテキスト表示
-				gameOverText.text = "おわり";			
+				gameOverText.text = "<score>\nクリア面数:"+wave_count+"\nミスクリック:"+miss_count;	
+				
 		        }
 
 
@@ -525,7 +539,7 @@ window.onload = function () {
 
 		//リトライボタン
 		const retryBtn = new Sprite(120, 60);				//画像サイズをここに書く。使う予定の画像サイズはプロパティで見ておくこと
-		retryBtn.moveTo(340, 470);						//リトライボタンの位置
+		retryBtn.moveTo(390,410);						//リトライボタンの位置
 		retryBtn.image = game.assets[retryImgUrl];			//読み込む画像の相対パスを指定。　事前にgame.preloadしてないと呼び出せない
 		endScene.addChild(retryBtn);					//endSceneにこのリトライボタン画像を貼り付ける  
 
